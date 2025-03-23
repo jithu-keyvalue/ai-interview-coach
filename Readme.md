@@ -1,18 +1,13 @@
-# 06-validate-input
+# 07-validate-with-pydantic
 
 ## 🎯 Problem
-The coach shouldn’t crash when we send bad input. Let’s validate and respond cleanly.
+Use Pydantic to cleanly validate and parse the user profile.
 
 ## ✅ Your Task
-In create_user:
-- Validate role is one of: developer, designer, product-manager
-- validate place is present and is a string
-
-In get_user:
-- Return 404 if user not found, instead of crashing
+- Define a Pydantic model `User` for input to `/api/users` with validation logic:
+  - `name`: min length 2, max_length 10
+  - `role`: must be one of `"developer"`, `"designer"`, `"product-manager"`, `"tester"`
+  - `place`: min length 2
 
 ## 🧪 Test
-Use Swagger UI (http://localhost:8000/docs) to try:
-- invalid role
-- Missing/invalid place
-- get user id=0
+- Try valid and invalid requests using Swagger UI: http://localhost:8000/docs

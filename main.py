@@ -1,25 +1,29 @@
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
+from typing import Literal
 
 app = FastAPI()
 users = {}
 
-ALLOWED_ROLES = {"developer", "designer", "product-manager"}
+class User(BaseModel):
+    name: str = Field(..., min_length=2) # 📝 TODO: enforce max length = 10
+    role: Literal["developer", "designer", "product-manager"] # 📝 TODO: allow role "tester" also
+    place: str  # 📝 TODO: enforce min length = 2
 
-@app.post("/api/users")
-def create_user(data: dict):
-    # ✅ Validate name exists and is a string
-    if "name" not in data or not isinstance(data["name"], str):
-        return JSONResponse(status_code=400, content={"error": "Invalid or missing name"})
+@app.post("/api/users", status_code=201)
+def create_user(user: dict): # 📝 TODO: use correct type
+    # if "name" not in user or not isinstance(user["name"], str):
+    #     return JSONResponse(status_code=400, content={"error": "Name is required and must be a string"})
 
-    # 📝 TODO: Validate role is in ALLOWED_ROLES
-    # 📝 TODO: Validate place exists and is a string
+    # if "role" not in user or user["role"] not in ALLOWED_ROLES:
+    #     return JSONResponse(status_code=400, content={"error": "Unsupported role"})
 
+    # if "place" not in user or not isinstance(user["place"], str):
+    #     return JSONResponse(status_code=400, content={"error": "Place is required and must be a string"})
     user_id = len(users) + 1
-    users[user_id] = data
+    users[user_id] = user.model_dump()
     return {"id": user_id, "message": "User profile saved!"}
 
 @app.get("/api/users/{user_id}")
 def get_user(user_id: int):
-    # 📝 TODO: Return 404 if user_id is not found 
-    return users[user_id]
+    return users.get(user_id, {"error": "User not found"})
