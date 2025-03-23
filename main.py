@@ -1,9 +1,15 @@
 from fastapi import FastAPI
-from datetime import datetime
 
 app = FastAPI()
 
-@app.get("/api/time")
-def get_time():
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return { "time": current_time }
+users = {}
+
+@app.post("/api/users")
+def create_user(data):  # 📝 TODO: Add type annotation to read request body
+    # 📝 TODO: Save the user data with auto-generated id
+    return {"message": "User profile saved!"}
+
+@app.get("/api/users/{id}")
+def get_user(id): # 📝 TODO: Add type annotation to read request body
+    # 📝 TODO: Return user with given id
+    return {}

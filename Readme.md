@@ -1,13 +1,11 @@
-# 03-query-param-greet
+# 04-post-store-user
 
 ## 🎯 Problem
-Make the coach greet us by name, if we send it in the request.
+Build APIs to create and fetch a user profile.
 
 ## ✅ Your Task
-- Modify /api/time to accept a query param name 
-- respond like:
-{ "message": "Hi <name>! It's <time>" }
+- POST /api/users: Accept a user object (name, role, place), assign an id, and save it
+- GET /api/users/{id}: Return the user with that id.
 
 ## 🧪 Test
-- Check http://localhost:8000/api/time
-- Check http://localhost:8000/api/time?name=alan
+- Test POST and GET with Swagger UI: http://localhost:8000/docs
