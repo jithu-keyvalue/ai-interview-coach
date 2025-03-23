@@ -1,11 +1,11 @@
-# 04-post-store-user
+# 05-put-delete-user
 
 ## 🎯 Problem
-Build APIs to create and fetch a user profile.
+Support updating and deleting a user profile using the correct HTTP methods.
 
 ## ✅ Your Task
-- POST /api/users: Accept a user object (name, role, place), assign an id, and save it
-- GET /api/users/{id}: Return the user with that id.
+- PUT /api/users/{id}: Update name, role, place of a user
+- DELETE /api/users/{id}: Delete a user by id
 
 ## 🧪 Test
-- Test POST and GET with Swagger UI: http://localhost:8000/docs
+Use Swagger UI: http://localhost:8000/docs
