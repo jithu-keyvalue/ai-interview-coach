@@ -13,10 +13,10 @@ Make the coach tell the current server time via an API.
 - requirements.txt 
 
 ## ✅ Your Task
-- Add GET /api/time endpoint
-- Return: { "time": "YYYY-MM-DD HH:MM:SS" }
-  - Use datetime.now().strftime(...)
+- Add /api/time endpoint
+- Response format: { "time": <current_timestamp> }
+  - Use datetime.datetime.now()
 
 ## 🧪 Test
 -  Run the Server: `uvicorn main:app --reload`
-- Check http://127.0.0.1:8000/api/time
+- Check http://localhost:8000/api/time
