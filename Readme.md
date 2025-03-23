@@ -1,11 +1,18 @@
-# 05-put-delete-user
+# 06-validate-input
 
 ## 🎯 Problem
-Support updating and deleting a user profile using the correct HTTP methods.
+The coach shouldn’t crash when we send bad input. Let’s validate and respond cleanly.
 
 ## ✅ Your Task
-- PUT /api/users/{id}: Update name, role, place of a user
-- DELETE /api/users/{id}: Delete a user by id
+In create_user:
+- Validate role is one of: developer, designer, product-manager
+- validate place is present and is a string
+
+In get_user:
+- Return 404 if user not found, instead of crashing
 
 ## 🧪 Test
-Use Swagger UI: http://localhost:8000/docs
+Use Swagger UI (http://localhost:8000/docs) to try:
+- invalid role
+- Missing/invalid place
+- get user id=0

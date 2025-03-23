@@ -1,25 +1,25 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
-
 users = {}
+
+ALLOWED_ROLES = {"developer", "designer", "product-manager"}
 
 @app.post("/api/users")
 def create_user(data: dict):
+    # ✅ Validate name exists and is a string
+    if "name" not in data or not isinstance(data["name"], str):
+        return JSONResponse(status_code=400, content={"error": "Invalid or missing name"})
+
+    # 📝 TODO: Validate role is in ALLOWED_ROLES
+    # 📝 TODO: Validate place exists and is a string
+
     user_id = len(users) + 1
     users[user_id] = data
     return {"id": user_id, "message": "User profile saved!"}
 
 @app.get("/api/users/{user_id}")
 def get_user(user_id: int):
-    return users.get(user_id, {"error": "User not found"})
-
-@app.get("/api/users/{user_id}") # 📝 TODO: Correct HTTP method
-def update_user(user_id: int, data):  # 📝 TODO: Add type annotation for body
-    # 📝 TODO: Update user data if user exists
-    pass
-
-@app.get("/api/users/{user_id}") # 📝 TODO: Correct HTTP method
-def delete_user(user_id: int):
-    # 📝 TODO: Delete user if user exists
-    pass
+    # 📝 TODO: Return 404 if user_id is not found 
+    return users[user_id]
