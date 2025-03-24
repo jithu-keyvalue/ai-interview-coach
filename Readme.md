@@ -1,13 +1,20 @@
-# 07-validate-with-pydantic
+# 08-setup-db-postgres
 
 ## 🎯 Problem
-Use Pydantic to cleanly validate and parse the user profile.
+Set up Postgres using Docker Compose.
 
-## ✅ Your Task
-- Define a Pydantic model `User` for input to `/api/users` with validation logic:
-  - `name`: min length 2, max_length 10
-  - `role`: must be one of `"developer"`, `"designer"`, `"product-manager"`, `"tester"`
-  - `place`: min length 2
+## ⚙️ Your Task
+- Create a `docker-compose.yml` to spin up a Postgres DB
+- Create a `.env` file to store DB name, username and password (see sample.env)
+- Run the container and test connectivity
 
 ## 🧪 Test
-- Try valid and invalid requests using Swagger UI: http://localhost:8000/docs
+- Run: `docker compose up`
+- Verify container is running: `docker ps`
+- Connect to the DB:
+  - `docker exec -it <container_name> psql -U <your_user> -d <your_db>`
+  - Run a SQL command like: `SELECT NOW();`
+
+## 📦 Starter Code
+- `sample.env`
+- `docker-compose.yml`
