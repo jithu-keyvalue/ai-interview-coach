@@ -5,8 +5,8 @@ Persist user data in a real Postgres DB — no more in-memory store!
 
 ## ✅ Your Task
 - Complete the schema: Add `role` and `place` fields
-- Add missing column `place` to the `INSERT` query in `create_user`
-- Fix the error and finish `get_user`
+- Add missing columns in the `INSERT` query in `create_user`
+- Fix/finish `get_user`
 
 ## 📦 Starter Code
 - `main.py` — with app skeleton
