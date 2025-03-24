@@ -1,31 +1,35 @@
 from fastapi import FastAPI, HTTPException
 import psycopg2
-from psycopg2.extras import RealDictCursor
 import os
 from dotenv import load_dotenv
+from contextlib import asynccontextmanager
 
 load_dotenv()
 
-app = FastAPI()
-
 def get_db_connection():
-    conn = psycopg2.connect(
+    return psycopg2.connect(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
         host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT"),
+        port=os.getenv("DB_PORT")
     )
-    return conn
 
-@app.on_event("startup")
-def initialize():
+def init_db():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute(open("schema.sql").read())  # Load schema
+    with open("schema.sql") as f:
+        cur.execute(f.read())
     conn.commit()
     cur.close()
     conn.close()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield  # startup done
+
+app = FastAPI(lifespan=lifespan)
 
 @app.post("/api/users")
 def create_user(data: dict):
@@ -44,9 +48,15 @@ def create_user(data: dict):
 @app.get("/api/users/{user_id}")
 def get_user(user_id: int):
     # 📝 Todo: get connection first
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    cur = conn.cursor()
     cur.execute("SELECT * FROM ai_coach_app_users WHERE id = %s", (user_id,))  # 🐛 Fix bug
-    user = cur.fetchone()
+    row = cur.fetchone()
+    user = {
+    "id": row[0],
+    "name": row[1],
+    # 📝 TODO: Include role too
+    "place": row[3],
+    }
     cur.close()
     conn.close()
     if user:
