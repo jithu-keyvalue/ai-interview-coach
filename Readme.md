@@ -1,22 +1,19 @@
-# 09-connect-app-to-db
+# 10-save-users-db
 
 ## 🎯 Problem
-Let's connect the app to a real Postgres DB.
+Persist user data in a real Postgres DB — no more in-memory store!
 
 ## ✅ Your Task
-- Add `.env` with env variables app needs (see sample.env)
-- In `/api/test-db`, connect to the database and return the current time
-- Use `os.getenv` to read config
-- Use `psycopg2` to run DB query
+- Complete the schema: Add `role` and `place` fields
+- Add missing column `place` to the `INSERT` query in `create_user`
+- Fix the error in `get_user`
 
 ## 📦 Starter Code
-- `requirements.txt` - updated
-- `sample.env`
-- `docker-compose.yml`
-- `main.py` — FastAPI app scaffold
+- `main.py` — with app skeleton
+- `schema.sql` 
 
 ## 🧪 Test
-- install new libraries: `pip install -r requirements.txt`
 - Run the app: `uvicorn main:app --reload`
-- Open: http://localhost:8000/api/test-db
-- You should see the DB timestamp!
+- Go to: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Try creating and fetching users
+

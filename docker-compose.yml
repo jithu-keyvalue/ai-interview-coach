@@ -3,7 +3,7 @@ services:
     image: postgres
     container_name: interview-db
     ports:
-      - "5432:5432"
+      - "5434:5432"
     env_file:
       - docker.env
     volumes:
