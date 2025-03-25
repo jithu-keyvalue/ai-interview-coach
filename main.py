@@ -12,7 +12,8 @@ def create_user(data: dict):
 
 @app.get("/api/users/{user_id}")
 def get_user(user_id: int):
-    return users.get(user_id, {"error": "User not found"})
+    return users[user_id]
+
 
 @app.get("/api/users/{user_id}") # 📝 TODO: Correct HTTP method
 def update_user(user_id: int, data):  # 📝 TODO: Add type annotation for body
