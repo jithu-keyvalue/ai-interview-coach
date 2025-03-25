@@ -1,4 +1,4 @@
-💭 To start with, how are people going to reach the coach?
+💭 To start with, how are people going to reach the coach? 
 We need a website. Let’s create one!
 
 🎯 Problem 
