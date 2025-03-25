@@ -1,7 +1,7 @@
 💭 How do we make the coach reject bad input?
 We want to avoid broken or confusing data in the system.
 
-🎯 Problem
+🎯 Problem  
 The coach shouldn’t crash when we send bad input. Let’s validate and respond cleanly.
 
 ✅ Your Task
