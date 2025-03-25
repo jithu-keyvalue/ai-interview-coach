@@ -1,7 +1,7 @@
 💭 How can coach talk to the database?
 Let’s test a real DB connection from our app!
 
-🎯 Problem
+🎯 Problem  
 Connect the app to a real Postgres DB.
 
 ✅ Your Task
