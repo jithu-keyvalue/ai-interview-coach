@@ -1,6 +1,10 @@
 from fastapi import FastAPI
-from datetime import datetime
+import datetime
 
 app = FastAPI()
 
-# TODO: Add the GET /api/time endpoint here
+@app.get("/")
+def hello_world():
+    return "Hello world!"
+
+# 📝 TODO:  Add the GET /api/time endpoint here

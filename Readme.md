@@ -1,22 +1,22 @@
-# 02-hello-api-time
+02-hello-api-time
 
-## 🎯 Problem
+🎯 Problem
 Make the coach tell the current server time via an API.
 
-## ⚙️ Pre-requisites
+⚙️ Pre-requisites
 - Create virtual environment (only once): `python3 -m venv .venv`
 - Activate it: `source .venv/bin/activate`
 - Install required libraries: `pip install -r requirements.txt`
 
-## 📦 Already Included
+📦 Already Included
 - main.py — FastAPI app skeleton
 - requirements.txt 
 
-## ✅ Your Task
+✅ Your Task
 - Add /api/time endpoint
 - Response format: { "time": <current_timestamp> }
   - Use datetime.datetime.now()
 
-## 🧪 Test
+🧪 Test
 -  Run the Server: `uvicorn main:app --reload`
 - Check http://localhost:8000/api/time
