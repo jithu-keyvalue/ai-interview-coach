@@ -1,7 +1,7 @@
 💭 How to give coach some persistent memory?
 Add a Postgres database using Docker Compose.
 
-🎯 Problem
+🎯 Problem  
 Set up Postgres using Docker Compose.
 
 ⚙️ Your Task
