@@ -1,17 +1,25 @@
-💭 How can the coach remember user data across restarts?
-Let’s save it in Postgres using SQL.
+💭 What’s the right way to handle user credentials securely?  
+
+We need to store passwords securely (not in plain text), and avoid exposing them in API responses.  
 
 🎯 Problem  
-Persist user data in a real Postgres DB — no more in-memory store!
+Securely store user credentials using password hashing and proper response handling.  
 
-✅ Your Task
-- Complete the schema: Add `role` and `place` fields
-- Add missing columns in the `INSERT` query in `create_user`
-- Fix/finish `get_user`
+✅ Your Task  
+- Add a hashed version of password using passlib
+- Do NOT store or return plain passwords
+- Use Pydantic models:
+  - `UserCreate` for request
+  - `UserOut` for response (exclude password)
+- Use `response_model` in endpoints
 
-🧪 Test
+🧪 Test  
+- Install deps: `pip install -r requirements.txt`
 - Run the app: `uvicorn main:app --reload`
-- Go to: [http://localhost:8000/docs](http://localhost:8000/docs)
-- Test creating users
-- Test fetching users
+- Try POST /api/users and GET /api/users/{id} via Swagger (/docs)
+- Ensure password is not returned in response
 
+📎 Note: 
+If you're re-running after modifying schema.sql, make sure to:
+- Uncomment `ALTER TABLE` statement for first run
+- Comment it out after running once (to avoid errors)

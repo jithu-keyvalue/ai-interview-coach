@@ -1,10 +1,13 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from pydantic import BaseModel, Field
+from passlib.context import CryptContext
 import psycopg2
 import os
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 
 load_dotenv()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def get_db_connection():
     return psycopg2.connect(
@@ -31,35 +34,43 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-@app.post("/api/users")
-def create_user(data: dict):
+class UserCreate(BaseModel):
+    name: str = Field(..., min_length=2)
+    role: str
+    place: str
+    password: str = Field(..., min_length=6)
+
+class UserOut(BaseModel):
+    id: int
+    name: str
+    # 📝 TODO: Add role and place to the response model
+
+@app.post("/api/users", response_model=UserOut, status_code=201)
+def create_user(user: UserCreate):
+    # 📝 TODO: Pass user.password to the hashing function
+    hashed_pw = pwd_context.hash("...")
+
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
-        "INSERT INTO users (name, role, place) VALUES (%s, %s, %s) RETURNING id",  # 📝 TODO: Add password column
-        (data["name"], data["role"], data["place"])  # 📝 TODO: Include password value
+        "INSERT INTO users (name, role, place, password_hash) VALUES (%s, %s, %s, %s) RETURNING id",
+        (user.name, user.role, user.place, hashed_pw)
     )
     user_id = cur.fetchone()[0]
     conn.commit()
     cur.close()
     conn.close()
-    return {"id": user_id, "message": "User profile saved!"}
+    return { "id": user_id, "name": user.name, "role": user.role, "place": user.place }
 
-@app.get("/api/users/{user_id}")
+@app.get("/api/users/{user_id}")  # 📝 TODO: Add response_model=UserOut here
 def get_user(user_id: int):
-    # 📝 Todo: get connection first
+    conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    cur.execute("SELECT id, name, role, place FROM users WHERE id = %s", (user_id,))
     row = cur.fetchone()
-    user = {
-        "id": row[0],
-        "name": row[1],
-        "role": row[2],
-        "place": row[3],
-        "password": row[4] # 📝 TODO: Don’t include password in response
-    }
     cur.close()
     conn.close()
-    if user:
-        return user
-    raise HTTPException(status_code=404, detail="User not found")
+
+    if row:
+        return dict(zip(["id", "name", "role", "place"], row))
+    return {"error": "User not found"}  # 📝 TODO: What happens without response_model?
