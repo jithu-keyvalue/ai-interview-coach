@@ -1,7 +1,7 @@
 💭 How can we simplify validation and keep our code clean?
 We’ve been manually validating input — let’s use Pydantic to do it the clean way.
 
-🎯 Problem
+🎯 Problem  
 Use Pydantic to cleanly validate and parse the user profile.
 
 ✅ Your Task
