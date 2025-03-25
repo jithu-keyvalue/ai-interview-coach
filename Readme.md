@@ -1,3 +1,6 @@
+💭 How to get the coach say something dynamic?
+Make the coach return the current server time via an API.
+
 🎯 Problem
 Make the coach tell the current server time via an API.
 
