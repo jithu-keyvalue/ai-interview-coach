@@ -1,5 +1,3 @@
-02-hello-api-time
-
 🎯 Problem
 Make the coach tell the current server time via an API.
 
