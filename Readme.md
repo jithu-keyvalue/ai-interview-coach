@@ -1,7 +1,7 @@
 💭 How to pass some data to the coach?
 Send data to the coach via the URL (query param)
 
-🎯 Problem
+🎯 Problem  
 Make the coach greet us by name, if we send it in the request.
 
 ✅ Your Task
