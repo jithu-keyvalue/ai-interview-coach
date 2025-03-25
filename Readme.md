@@ -1,7 +1,7 @@
 💭 How can the coach remember user data across restarts?
 Let’s save it in Postgres using SQL.
 
-🎯 Problem
+🎯 Problem  
 Persist user data in a real Postgres DB — no more in-memory store!
 
 ✅ Your Task
