@@ -1,14 +1,15 @@
-# 08-setup-db-postgres
+💭 How to give coach some persistent memory?
+Add a Postgres database using Docker Compose.
 
-## 🎯 Problem
+🎯 Problem
 Set up Postgres using Docker Compose.
 
-## ⚙️ Your Task
+⚙️ Your Task
 - Create a `docker.env` file to set DB name, username and password (see sample.docker.env)
 - Complete `docker-compose.yml` to spin up a Postgres DB
 - Run the container and test connectivity
 
-## 🧪 Test
+🧪 Test
 - Run: `docker compose up`
 - Verify container is running: `docker ps`
 - Connect to the DB:
@@ -18,6 +19,6 @@ Set up Postgres using Docker Compose.
 Note: `docker compose down -v` if you want remove previously created volume. If you created the DB and decide to change the user name/password, you can run `down -v` first and then `up`.
 
 
-## 📦 Starter Code
+📦 Starter Code
 - `sample.env`
 - `docker-compose.yml`
