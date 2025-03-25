@@ -8,11 +8,7 @@ Make the coach tell the current server time via an API.
 - Create virtual environment (only once): `python3 -m venv .venv` 
 - Activate it: `source .venv/bin/activate`
 - Install required libraries: `pip install -r requirements.txt`
-  
-📦 Already Included  
-- main.py — FastAPI app skeleton
-- requirements.txt 
-  
+   
 ✅ Your Task  
 - Add /api/time endpoint
 - Response format: { "time": <current_timestamp> }
