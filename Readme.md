@@ -1,9 +1,10 @@
-# 06-validate-input
+💭 How do we make the coach reject bad input?
+We want to avoid broken or confusing data in the system.
 
-## 🎯 Problem
+🎯 Problem
 The coach shouldn’t crash when we send bad input. Let’s validate and respond cleanly.
 
-## ✅ Your Task
+✅ Your Task
 In create_user:
 - Validate role is one of: developer, designer, product-manager
 - validate place is present and is a string
@@ -11,7 +12,7 @@ In create_user:
 In get_user:
 - Return 404 if user not found, instead of crashing
 
-## 🧪 Test
+🧪 Test
 Use Swagger UI (http://localhost:8000/docs) to try:
 - invalid role
 - Missing/invalid place

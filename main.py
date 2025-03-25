@@ -13,6 +13,7 @@ def create_user(data: dict):
         return JSONResponse(status_code=400, content={"error": "Invalid or missing name"})
 
     # 📝 TODO: Validate role is in ALLOWED_ROLES
+
     # 📝 TODO: Validate place exists and is a string
 
     user_id = len(users) + 1
