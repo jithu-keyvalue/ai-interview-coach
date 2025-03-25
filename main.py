@@ -4,6 +4,6 @@ from datetime import datetime
 app = FastAPI()
 
 @app.get("/api/time")
-def get_time():
+def get_time(name: str):
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return { "time": current_time }
+    return '' # 📝 TODO: respond like { "message": "Hi <name>! It's <time>" }
