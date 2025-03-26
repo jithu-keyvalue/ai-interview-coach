@@ -43,12 +43,13 @@ class UserCreate(BaseModel):
 class UserOut(BaseModel):
     id: int
     name: str
-    # 📝 TODO: Add role and place to the response model
+    # 📝 TODO: Complete this response model by adding role and place
 
 @app.post("/api/users", response_model=UserOut, status_code=201)
 def create_user(user: UserCreate):
-    # 📝 TODO: Pass user.password to the hashing function
-    hashed_pw = pwd_context.hash("...")
+
+    # 📝 TODO: use the password user gave here
+    hashed_pw = pwd_context.hash("password")
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -62,15 +63,18 @@ def create_user(user: UserCreate):
     conn.close()
     return { "id": user_id, "name": user.name, "role": user.role, "place": user.place }
 
-@app.get("/api/users/{user_id}")  # 📝 TODO: Add response_model=UserOut here
+
+@app.get("/api/users/{user_id}")
 def get_user(user_id: int):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, name, role, place FROM users WHERE id = %s", (user_id,))
+    cur.execute("SELECT id, name, role, place, password_hash FROM users WHERE id = %s", (user_id,))
     row = cur.fetchone()
     cur.close()
     conn.close()
 
+    # 📝 TODO: OMG, somebody's sending password_hash in response! 
+    # Please fix this by enforcing a response structure for this endpoint
     if row:
-        return dict(zip(["id", "name", "role", "place"], row))
-    return {"error": "User not found"}  # 📝 TODO: What happens without response_model?
+        return dict(zip(["id", "name", "role", "place", "password_hash"], row))
+    return {"error": "User not found"}
