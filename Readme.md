@@ -107,7 +107,7 @@
 # 13-sqlalchemy-crud
 - SessionLocal(): Creates a new SQLAlchemy session for talking to the DB
 - query().filter().first(): Searches for matching user and returns first (or None)
-- db.commit(): Saves changes to the DB
+- db.commit(): Saves changes to the DB. Can be used to batch multiple changes, rollback if required.
 - db.refresh(obj): Reloads object from DB to get latest state after insert/update
 - .all(): Fetches all matching records — returns list
 - orm_mode = True: Tells Pydantic to convert SQLAlchemy models to response schemas
