@@ -12,12 +12,13 @@ Use SQLAlchemy to define the User table and rewrite the POST and GET endpoints u
 This ensures SQLAlchemy can create it cleanly on startup.  
 
 ✅ Your Task  
+- Add `sqlalchemy` to requirements.txt
 - Create a SQLAlchemy User model (id, name, role, place, password_hash)
 - On startup, create the table with Base.metadata.create_all()
 - Update /api/users and /api/users/{id} to use SQLAlchemy instead of psycopg2
 
 
 🧪 Test  
-- `pip install -r requirements.txt`  (SQLAlchemy added)
+- `pip install -r requirements.txt`  (for SQLAlchemy)
 - `uvicorn main:app --reload`
 - POST & GET user via Swagger UI - should work as before, now powered by SQLAlchemy
