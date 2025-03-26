@@ -103,3 +103,11 @@
 - Why ORM: Cleaner code, safer queries, reusable models, and fewer errors.
 - Base.metadata.create_all(): Auto-creates all tables defined using the ORM.
 - Session: SQLAlchemy’s interface to run queries, insert rows, commit, etc.
+
+# 13-sqlalchemy-crud
+- SessionLocal(): Creates a new SQLAlchemy session for talking to the DB
+- query().filter().first(): Searches for matching user and returns first (or None)
+- db.commit(): Saves changes to the DB
+- db.refresh(obj): Reloads object from DB to get latest state after insert/update
+- .all(): Fetches all matching records — returns list
+- orm_mode = True: Tells Pydantic to convert SQLAlchemy models to response schemas
