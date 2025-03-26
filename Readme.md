@@ -120,3 +120,6 @@
 - By default, a website can only make requests to the same domain it came from.
 If your HTML is served from one place (like localhost:8000) and tries to talk to an API on another (like localhost:8001), the browser blocks it unless the server explicitly allows it.
 It prevents malicious websites from secretly calling your APIs using a user’s browser.
+- CORSMiddleware: FastAPI plugin that lets you allow frontend apps (on other domains/ports) to access your API.
+- http.server: Used to serve static frontend files (like signup.html) via a local web server. Required for browser to treat it as a real website.
+- fetch(): JS function to call APIs from frontend. Similar to curl, but runs in the browser.
