@@ -92,3 +92,10 @@
 - INSERT INTO users (...) VALUES (...) RETURNING id: Saves user and gives back the new ID
 - lifespan (FastAPI): Modern way to run setup/teardown logic (like DB init) during app startup/shutdown. Replaces deprecated @app.on_event("startup").
 - asynccontextmanager: Lets you define async-compatible setup/teardown blocks using yield — used with lifespan to run startup logic once.
+
+# 11-secure-password
+- Schema Migration (manual): To change an existing table, use ALTER TABLE. E.g., ALTER TABLE users ADD COLUMN password_hash TEXT;
+- Passlib: Library used for hashing passwords (to store it securely).
+- Why response_model? - This forces a clean API contract and auto-docs it. (Eg: Returning raw DB data can leak sensitive fields.)
+
+
