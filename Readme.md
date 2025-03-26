@@ -1,24 +1,17 @@
-💭 How to stop writing raw SQL and work with Python objects instead?  
+💭 How to manage users cleanly with less SQL?  
 
-Let’s use SQLAlchemy ORM to define our DB structure and interact with it like real Python code.  
 
 🎯 Problem  
-Use SQLAlchemy to define the User table and rewrite the POST and GET endpoints using the ORM — no raw SQL.
+Use SQLAlchemy to rewrite our user-related API endpoints.  
 
-⚠️ Manual Step (Do This First)  
-  `docker exec -it interview-db psql -U <user> -d <db>`
-  `DROP TABLE users;`  
-
-This ensures SQLAlchemy can create it cleanly on startup.  
 
 ✅ Your Task  
-- Add `sqlalchemy` to requirements.txt
-- Create a SQLAlchemy User model (id, name, role, place, password_hash)
-- On startup, create the table with Base.metadata.create_all()
-- Update /api/users and /api/users/{id} to use SQLAlchemy instead of psycopg2
+Complete endpoints using SQLAlchemy for:
+- GET /api/users: Fetch all users
+- PUT /api/users/{id}: Update user
+- DELETE /api/users/{id}: Delete user
 
 
 🧪 Test  
-- `pip install -r requirements.txt`  (for SQLAlchemy)
-- `uvicorn main:app --reload`
-- POST & GET user via Swagger UI - should work as before, now powered by SQLAlchemy
+- Run the app: `uvicorn main:app --reload`
+- Use Swagger UI to test endpoints: http://localhost:8000/docs

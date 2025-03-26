@@ -1,5 +1,6 @@
+from pydantic import BaseModel, Field
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
@@ -9,5 +10,17 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     role = Column(String, nullable=False)
-    # 📝 TODO: Add place column
+    place = Column(String, nullable=False)
     password_hash = Column(String, nullable=False)
+
+class UserCreate(BaseModel):
+    name: str = Field(..., min_length=2)
+    role: str
+    place: str
+    password: str = Field(..., min_length=6)
+
+class UserOut(BaseModel):
+    id: int
+    name: str
+    role: str
+    place: str
