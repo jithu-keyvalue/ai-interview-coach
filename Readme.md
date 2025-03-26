@@ -11,7 +11,7 @@ Securely store user credentials using password hashing and proper response handl
 - Do NOT store plain password: store hashed password instead
 
 - Use Pydantic models:
-  - `UserCreate` for request
+  - `UserCreate` for validating input
   - `UserOut` for response (to exclude password)
 - Use `response_model` in endpoints
 
