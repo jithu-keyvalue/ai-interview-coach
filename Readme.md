@@ -111,3 +111,12 @@
 - db.refresh(obj): Reloads object from DB to get latest state after insert/update
 - .all(): Fetches all matching records — returns list
 - orm_mode = True: Tells Pydantic to convert SQLAlchemy models to response schemas
+
+# 14-signup-from-frontend
+- origin - protocol + domain + port
+- http://localhost:8000 and http://localhost:8001 are distinct origins
+- http://localhost:8000 & file://... (null origin) are also different origins.
+- CORS = Cross-Origin Resource Sharing.
+- By default, a website can only make requests to the same domain it came from.
+If your HTML is served from one place (like localhost:8000) and tries to talk to an API on another (like localhost:8001), the browser blocks it unless the server explicitly allows it.
+It prevents malicious websites from secretly calling your APIs using a user’s browser.
