@@ -1,26 +1,23 @@
-💭 What’s the right way to handle user credentials securely?  
+💭 How to stop writing raw SQL and work with Python objects instead?  
 
-We need to store passwords securely (not in plain text), and avoid exposing them in API responses.  
+Let’s use SQLAlchemy ORM to define our DB structure and interact with it like real Python code.  
 
 🎯 Problem  
-Securely store user credentials using password hashing and proper response handling.  
+Use SQLAlchemy to define the User table and rewrite the POST and GET endpoints using the ORM — no raw SQL.
+
+⚠️ Manual Step (Do This First)  
+  `docker exec -it interview-db psql -U <user> -d <db>`
+  `DROP TABLE users;`  
+
+This ensures SQLAlchemy can create it cleanly on startup.  
 
 ✅ Your Task  
-- Use schema.sql to update the column name to password_hash
+- Create a SQLAlchemy User model (id, name, role, place, password_hash)
+- On startup, create the table with Base.metadata.create_all()
+- Update /api/users and /api/users/{id} to use SQLAlchemy instead of psycopg2
 
-- Do NOT store plain password: store hashed password instead
-
-- Use Pydantic models:
-  - `UserCreate` for validating input
-  - `UserOut` for response (to exclude password)
-- Use `response_model` in endpoints
 
 🧪 Test  
-- Install new dependency passlib[bcrypt]: `pip install -r requirements.txt`
-- Run the app: `uvicorn main:app --reload`
-- Try POST /api/users and GET /api/users/{id} via Swagger (/docs)
-- Ensure password is not returned in response
-
-📎 Note: 
-- Uncomment `ALTER TABLE` statement for first app run
-- Comment it out after running once (to avoid errors)
+- `pip install -r requirements.txt`  (SQLAlchemy added)
+- `uvicorn main:app --reload`
+- POST & GET user via Swagger UI - should work as before, now powered by SQLAlchemy
