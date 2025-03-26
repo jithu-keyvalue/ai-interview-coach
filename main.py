@@ -2,11 +2,20 @@ from fastapi import FastAPI, HTTPException
 from models import Base, User, UserCreate, UserOut
 from database import engine, SessionLocal
 from passlib.context import CryptContext
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 Base.metadata.create_all(bind=engine)
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[""],  # Todo: allow origin for backend server
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 @app.post("/api/users", response_model=UserOut, status_code=201)
 def create_user(user: UserCreate):
@@ -40,8 +49,8 @@ def get_user(user_id: int):
 
 @app.put("/api/users/{user_id}", response_model=UserOut)
 def update_user(user_id: int, data: UserCreate):
-    # 📝 TODO: Create a DB session using SessionLocal()
-    user = db.query(User).filter(User.id == user_id)  # 📝 TODO: how to get first user from the list of matching users?
+    db = SessionLocal()
+    user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -49,15 +58,14 @@ def update_user(user_id: int, data: UserCreate):
     user.name = data.name
     user.role = data.role
     user.place = data.place
-    # 📝 TODO: Hash password and update
+    user.password_hash = pwd_context.hash(data.password)
 
-    # 📝 TODO: Looks like we forgot to commit
+    db.commit()
     
     db.refresh(user)
     return user
 
-# 📝 TODO: Fix method name for delete operation
-@app.get("/api/users/{user_id}", status_code=204)
+@app.delete("/api/users/{user_id}", status_code=204)
 def delete_user(user_id: int):
     db = SessionLocal()
     user = db.query(User).filter(User.id == user_id).first()
@@ -69,8 +77,7 @@ def delete_user(user_id: int):
     db.commit()
     return
 
-# 📝 TODO: Does the response structure look right?
-@app.get("/api/users", response_model=list[UserCreate])
+@app.get("/api/users", response_model=list[UserOut])
 def list_users():
     db = SessionLocal()
     return db.query(User).all()
