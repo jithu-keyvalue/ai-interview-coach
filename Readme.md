@@ -98,4 +98,8 @@
 - Passlib: Library used for hashing passwords (to store it securely).
 - Why response_model? - This forces a clean API contract and auto-docs it. (Eg: Returning raw DB data can leak sensitive fields.)
 
-
+# 12-use-sqlalchemy
+- SQLAlchemy ORM: Lets you define tables as Python classes, and rows as objects.
+- Why ORM: Cleaner code, safer queries, reusable models, and fewer errors.
+- Base.metadata.create_all(): Auto-creates all tables defined using the ORM.
+- Session: SQLAlchemy’s interface to run queries, insert rows, commit, etc.
