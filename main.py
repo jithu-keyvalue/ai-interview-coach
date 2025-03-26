@@ -27,7 +27,7 @@ def init_db():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
-    yield
+    yield  # startup done
 
 app = FastAPI(lifespan=lifespan)
 
@@ -36,8 +36,8 @@ def create_user(data: dict):
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
-        "INSERT INTO users (name, role, place) VALUES (%s, %s, %s) RETURNING id",  # 📝 TODO: Add password column
-        (data["name"], data["role"], data["place"])  # 📝 TODO: Include password value
+        "INSERT INTO users (name, role, password) VALUES (%s, %s, %s) RETURNING id",  # 📝 TODO: Include place too
+        (data["name"], data["role"], data["password"])
     )
     user_id = cur.fetchone()[0]
     conn.commit()
@@ -49,15 +49,17 @@ def create_user(data: dict):
 def get_user(user_id: int):
     # 📝 Todo: get connection first
     cur = conn.cursor()
-    cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    cur.execute("SELECT * FROM ai_coach_app_users WHERE id = %s", (user_id,))  # 🐛 Fix bug
     row = cur.fetchone()
+
+    # 📝 TODO: Include role too
     user = {
         "id": row[0],
         "name": row[1],
-        "role": row[2],
         "place": row[3],
-        "password": row[4] # 📝 TODO: Don’t include password in response
+        "password": row[4],
     }
+
     cur.close()
     conn.close()
     if user:
