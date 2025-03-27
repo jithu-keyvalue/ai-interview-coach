@@ -133,3 +133,10 @@ It prevents malicious websites from secretly calling your APIs using a user’s 
 - If aic.com replies with Access-Control-Allow-Origin: shadytricks.com, the browser lets it through.
 - If not (which is the secure default), the browser blocks it.
 - CORS makes sure only trusted origins (like app.aic.com) can access protected APIs on your behalf.
+
+# 15-alembic-migration
+- Alembic: A lightweight tool to manage DB schema changes (used with SQLAlchemy)
+- alembic.ini: Main config file for DB URL
+- env.py: Auto-generated DB migration context
+- --autogenerate: Alembic compares models.py to current DB and suggests changes
+- Migrations: consistent, reversible schema tracking (safer than raw SQL updates)
