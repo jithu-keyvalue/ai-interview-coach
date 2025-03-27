@@ -8,5 +8,5 @@ class User(Base):
     name = Column(String, nullable=False)
     role = Column(String, nullable=False) # 📝 TODO: remove role column
     place = Column(String, nullable=False) # 📝 TODO: remove place column
-    email = Column(Integer) # 📝 TODO: correct column type
+    email = Column(String) 
     password_hash = Column(String, nullable=False)
