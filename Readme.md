@@ -1,16 +1,25 @@
-💭 How can users log in to the coach securely?
-
-Let users log in and receive a secure token for further requests.
+💭 How to evolve DB structure without writing raw SQL like `ALTER TABLE ...`?
 
 🎯 Problem  
-Create a basic signup form and connect it to the FastAPI backend.  
+Let’s move from create_all to migrations with Alembic.
 
 ✅ Your Task  
-1. Finish signup.html by correcting the API call.
-2. Open signup.html file directly in a browser.
-3. Try signing up and see what happens in network tab/console.
-4. Bring up a separate server to serve the website using Python’s built-in server: (`python3 -m http.server 8001`)
-5. Access webpage via that server http://localhost:8001/signup.html
-6. Try signing up and see what happens in network tab/console.
-7. Allow requests from origin "http://localhost:8001" in app
-8. Try signing up. Confirm user got added via /docs
+- Fix models.py as per our target DB table column structure
+- Add `alembic` as a dependency in requirements.txt
+- Install alembic `pip install ...` 
+- Initialize alembic: `alembic init alembic`
+- Update this line in alembic.ini: `sqlalchemy.url = driver://user:pass@localhost/dbname` to `sqlalchemy.url = postgresql://aic_user:aic_pwd@localhost:5434/aic_db`
+- Update alembic/env.py:
+  - Replace these lines:
+    - `# from myapp import mymodel`
+    - `# target_metadata = mymodel.Base.metadata`
+    - `target_metadata = None`
+  - with
+    - `from models import Base`
+    - `target_metadata = Base.metadata`
+- Create migration script: `alembic revision --autogenerate -m "Update user table: drop role/place, add email"`
+- Run the migration script: `alembic upgrade head`
+
+🧪 Test  
+- Test user creation and fetch
+- Confirm new fields are reflected in DB
