@@ -1,15 +1,22 @@
-💭 How to evolve DB structure without writing raw SQL like `ALTER TABLE ...`?
+💭 How can we log in and greet the user securely?  
+
 
 🎯 Problem  
-Let’s move from create_all to migrations with Alembic.
+Implement login functionality using JWT. 
+Let the user sign in via UI, store token, and call a protected /api/me to greet them.
+
 
 ✅ Your Task  
-- Add `alembic` as a dependency in requirements.txt
-- Install alembic `pip install ...` 
-- Fix models.py as per our target DB table column structure
-- Create migration script: `alembic revision --autogenerate -m "Update user table: drop role/place, add email"` (this creates a plan for DB changes)
-- Run the migration script: `alembic upgrade head` (this executes the plan)
+- install python-jose dependency
+- Fix issues in login.html
+- Fix issues in signup.html 
+- Fix issues in home.html 
+- Complete the LoginInput model in schemas.py
+- set JWT_SECRET in env, choose a password-like string
+- fix the create_token, decode_token methods in auth.py
+- fix the /login, /me APIs in main.py
 
 🧪 Test  
-- Run app: `uvicorn main:app --reload` and test user creation and fetch
-- Confirm new fields are reflected in DB
+- Serve UI with: python3 -m http.server 8001
+- Run FastAPI: uvicorn main:app --reload
+- Sign up → Log in → See greeting from /api/me

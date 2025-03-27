@@ -9,3 +9,7 @@ class UserOut(BaseModel):
     id: int
     name: str
     email: str
+
+# 📝 TODO: one field is missing in this model
+class LoginInput(BaseModel):
+    password: str
