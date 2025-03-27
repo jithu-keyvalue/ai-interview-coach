@@ -140,3 +140,22 @@ It prevents malicious websites from secretly calling your APIs using a user’s 
 - env.py: Auto-generated DB migration context
 - --autogenerate: Alembic compares models.py to current DB and suggests changes
 - Migrations: consistent, reversible schema tracking (safer than raw SQL updates)
+
+
+# 16-auth-login-me 
+- JWT (JSON Web Token): A compact, signed token used for stateless authentication. Sent with each request in the Authorization header.
+- Authorization Header Format: Authorization: Bearer <token>
+- Token Generation: Use jwt.encode(payload, secret, algorithm) to generate token after login.
+- Token Decoding: Use jwt.decode(token, secret, algorithms) to extract data (like user_id) — fails if token is invalid or expired.
+- Token Expiry (exp): Standard JWT claim for expiration. Clients need to login again after expiry.
+- /api/me Endpoint: Uses token to fetch current user info — useful for showing logged-in user's name, email, etc.
+- Secure Login Flow:
+  - Backend verifies email + password.
+  - Returns token on success.
+  - Client stores token (usually in localStorage).
+  - All future requests attach token in headers.
+
+# 17-crud-logging-depends
+- Dependency Injection (DI): Use Depends() to automatically inject common things like DB connection or current user into endpoints — helps avoid repetition.
+- Optional Fields in Pydantic: Use Optional[...] = None to allow partial updates — only provided fields will be processed.
+
