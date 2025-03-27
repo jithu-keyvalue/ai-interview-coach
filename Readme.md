@@ -1,8 +1,6 @@
-💭 How can users sign up through a real web page?  
+💭 How can users log in to the coach securely?
 
-Let’s integrate our backend with a simple frontend.
-
-We will see what issues come up when the browser talks to the API directly.
+Let users log in and receive a secure token for further requests.
 
 🎯 Problem  
 Create a basic signup form and connect it to the FastAPI backend.  
