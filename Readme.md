@@ -159,3 +159,14 @@ It prevents malicious websites from secretly calling your APIs using a user’s 
 - Dependency Injection (DI): Use Depends() to automatically inject common things like DB connection or current user into endpoints — helps avoid repetition.
 - Optional Fields in Pydantic: Use Optional[...] = None to allow partial updates — only provided fields will be processed.
 
+# 18-ai-chat-openai
+- Model: A trained program that can understand or generate data like text or images.
+- LLM (Large Language Model) is a type of model — specifically, a model trained on a massive amount of text to understand and generate human language.
+- GPTs (Generative Pretrained Transformers) are a type of LLM (by OpenAI) that generates human-like text — powers ChatGPT.
+- Other LLM types (not GPT): Claude (Anthropic), Gemini (Google), LLaMA (Meta), Mistral (Open source)
+- Role Types in Chat API are used to simulate real conversation flow:
+   - system: Sets context for the assistant.
+   - user: Human message.
+   - assistant: AI reply.
+
+
