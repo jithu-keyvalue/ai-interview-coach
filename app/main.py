@@ -1,5 +1,7 @@
+import os
+import openai
 import logging
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from app.models import User
@@ -16,6 +18,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 📝 TODO: Are we using the right env variable name?
+openai.api_key = os.getenv("DB_HOST")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -55,7 +60,8 @@ def me(current_user: User = Depends(get_current_user)):
 def update_me(data: UpdateUser, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     if data.name:
         user.name = data.name
-    # 📝 TODO: update email value also
+    if data.email:
+        user.email = data.email
     if data.password:
         user.password_hash = hash_password(data.password)
 
@@ -64,11 +70,30 @@ def update_me(data: UpdateUser, db: Session = Depends(get_db), user: User = Depe
     return user
 
 
-# 📝 TODO: inject DB 
 @app.delete("/api/me", status_code=204)
 def delete_user(
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     db.delete(current_user)
-    # 📝 TODO: did we miss to save the change to DB?
+    db.commit()
     return
+
+
+# 📝 TODO: is the method alright?
+@app.get("/api/chat")
+def chat(request: Request, payload: str): # 📝 TODO: payload is string?
+    message = payload.get("message")
+    if not message:
+        raise HTTPException(status_code=400, detail="Message is required")
+
+    try:
+        # 📝 TODO: Please see what is wrong in this call to Open AI
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{ "role": "user", "content": "message" }]
+        )
+        reply = response.choices[0].message.content
+        return { "reply": reply }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
