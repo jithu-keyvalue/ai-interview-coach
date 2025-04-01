@@ -1,6 +1,8 @@
 import os
+import time
 import logging
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from app.models import User, Message
@@ -79,50 +81,54 @@ def delete_user(
     return
 
 
-# 📝 TODO: This endpoint is to create a chat message (accept from Front-end, send it to OpenAI, save exchange in our DB)
-@app.delete("/api/chat")
-def chat(
-    data: dict, # 📝 TODO: Is there a more suitable Input schema for this data? check schemas.py
+@app.post("/api/chat/stream")
+def chat_stream(
+    data: ChatInput,
     db: Session = Depends(get_db),
-    # 📝 TODO: Inject current user into this method
+    user: User = Depends(get_current_user)
 ):
-    # 📝 TODO: Currently the history we send to OpenAI will have 50 messages. Let's reduce that. 20 is fine for now.
-    past_messages = db.query(Message).filter(Message.user_id == user.id).order_by(Message.id.asc()).limit(50).all()
-    history = [
-        {"role": m.role, "content": m.content}
-        for m in past_messages
-    ]
+    past_messages = (
+        db.query(Message)
+        .filter(Message.user_id == user.id)
+        .order_by(Message.id.asc())
+        .limit(20)
+        .all()
+    )
+    history = [{"role": m.role, "content": m.content} for m in past_messages]
+    history.append({"role": "user", "content": data.message})
 
-    # Add latest user message to the history
-    # 📝 TODO: What should be the role value here?
-    # Hint: https://github.com/jithu-keyvalue/ai-interview-coach/blob/notes/Readme.md#18-ai-chat-openai
-    history.append({"role": "main", "content": data.message})
+    def event_generator():
+        full_reply = ""
+        try:
+            # 📝 TODO: We want this API call to stream the response back to us, how to turn streaming on?
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=history,
+                stream=False
+            )
+
+            for chunk in response:
+                delta = chunk.choices[0].delta
+                if delta.content:
+                    token = delta.content
+                    full_reply += token
+                    yield f"data: {token}\n\n"
+                    time.sleep(0.01)  # smoother delivery for UI
+
+            # Save conversation
+            db.add(Message(user_id=user.id, role="user", content=data.message))
+            db.add(Message(user_id=user.id, role="assistant", content=full_reply))
+            # 📝 TODO: We have prepared the records to be saved into the DB, but we still haven't saved the change in DB!
 
 
-    # 📝 TODO: Pass the history to the OpenAI API    
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=''
-        )
-        answer = response.choices[0].message.content
-    except Exception as e:
-        print("OpenAI error:", e)
-        raise HTTPException(status_code=500, detail="AI call failed")
+        except Exception as e:
+            logger.error(f"SSE Error: {e}")
+            yield f"event: error\ndata: Chat failed\n\n"
 
-  
-    answer = response.choices[0].message.content
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
 
-    # Save both user question and assistant reply
-    # 📝 TODO: something wrong with how we save the assistant's answer?
-    db.add(Message(user_id=user.id, role="user", content=data.message))
-    db.add(Message(user_id=user.id, role="assistant", content='answer'))
-    db.commit()
 
-    return { "reply": answer }
-
-# 📝 TODO: Are we setting the correct HTTP method here?
-@app.post("/api/chat/history")
+@app.get("/api/chat/history")
 def get_chat_history(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
