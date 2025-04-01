@@ -256,4 +256,24 @@ print(msg.user_id)    # ✅ is set
 
 ```
 
+## Lazy loading in SQLAlchemy
+```
+user = db.query(User).first()  # Fetches user only
+print(user.messages)  # Triggers separate SQL to fetch messages
+```
+- the related messages are fetched only if required. This is the 'laziness' part.
+- Saves memory if you don’t always need related data
 
+## N+1 problem
+```
+users = db.query(User).all()
+for user in users:
+    print(user.messages)  # ❌ N extra queries here! Not good!
+```
+- messages for each user are fetched in separate queries, not efficient
+- solution is eager-loading using `joinedload`
+```
+from sqlalchemy.orm import joinedload
+users = db.query(User).options(joinedload(User.messages)).all()
+```
+- This fetches all users and their messages in a single joined query.
