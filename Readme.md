@@ -277,3 +277,21 @@ from sqlalchemy.orm import joinedload
 users = db.query(User).options(joinedload(User.messages)).all()
 ```
 - This fetches all users and their messages in a single joined query.
+
+
+# 20-sse-stream
+- Server-Sent Events (SSE): A way for the server to push data to the client over a single long-lived HTTP connection.
+  - Unidirectional: server → client only.
+  - Used for real-time updates, notifications, streaming tokens, etc.
+  - Client initiates the connection via fetch or EventSource.
+  - Server keeps the connection open and sends data over time.
+  - Example:
+    - `const res = await fetch("/api/chat/stream");    // fetch starts the connection.`
+    - Once this connection is established, the server can push anytime, without further requests from the client.
+    - `const reader = res.body.getReader();    //  creates a stream reader on that open connection.`
+    - `const { value, done } = await reader.read();    // read incoming data from a stream — chunk by chunk`
+    - value is next chunk, done becomes true when stream finishes
+ - SSE in FastAPI
+   - Set response headers: `text/event-stream`
+   - Use yield to send data chunk by chunk
+   - Keep connection open with StreamingResponse
