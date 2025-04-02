@@ -336,3 +336,172 @@ socket.onmessage = (event) => {
 
 - If your frontend is served over https://, your WebSocket URL must use wss://
 - Websocket event handlers let us define what happens during each stage of a WebSocket’s life. Eg: onopen, onmessage, onerror, onclose, etc.
+
+
+# Asynchronous Programming (JS)
+
+## async/await
+- async: Declares a function as asynchronous.
+- await: Waits for a Promise to resolve.
+
+## Event loop
+- The event loop manages what to run next when async tasks (like I/O) are done.
+
+## synchronous vs. asynchronous
+- Synchronous = one thing at a time. Each line blocks the next.
+  - let x = 5 + 3
+  - console.log("Hello")
+  - for, if, etc.
+- Asynchronous = non-blocking. JS can start a task, move on, and come back later when it’s done. useful to avoid freezing the UI or blocking main thread during slow operations like Common for slow operations like:
+  - API calls (fetch)
+  - File reads (Node.js)
+  - Timers (setTimeout)
+  - DB access
+- how do you know what JS won’t wait for? If it returns a Promise, JS won’t wait unless you await it.
+
+## Promise
+- A Promise is an object representing the future result of an async operation. States:
+ - pending: not finished yet
+ - fulfilled: completed successfully
+ - rejected: failed with error
+
+## JS Execution Model
+- JS is single-threaded (one task at a time).
+- To avoid freezing the UI when doing slow stuff (like network calls), JS uses something called the event loop with asynchronous APIs under the hood (via the browser or Node).
+
+## How Async Works Under the Hood
+- Async task (e.g. fetch) starts.
+- Browser handles it (not the JS thread).
+- JS keeps running other code.
+- When the task is done, the callback is added to the task queue.
+- Event loop picks it up when JS thread is free.
+
+## Without await
+```
+const res = fetch('/api');  // returns Promise immediately
+console.log(res);           // logs: Promise { <pending> }
+```
+
+## With await
+```
+const res = await fetch('/api'); // waits here until response is ready
+```
+
+## sample async function
+```
+async function safeFetch() {
+  try {
+    const res = await fetch('/bad-url');
+    const data = await res.json();
+  } catch (err) {
+    console.error("Something went wrong", err);
+  }
+}
+```
+
+## Proof That Other Async Code Can Run During await
+```
+setInterval(() => console.log(new Date().toLocaleTimeString()), 1000);
+
+async function slowOperation() {
+  console.log("Starting slow task...");
+  await new Promise(res => setTimeout(res, 5000));
+  console.log("Finished");
+}
+
+slowOperation();
+```
+- Clock keeps ticking even while await pauses the function.
+- JS thread is not blocked, only the slowOperation is paused.
+
+
+
+
+# Asynchronous Programming (Python)
+
+## async/await
+- async: Declares a function as asynchronous.
+- await: Waits for an awaitable
+
+## synchronous vs. asynchronous
+- Synchronous = one thing at a time. Each line blocks the next.
+```
+print("Start")
+result = long_running_func()
+print("Done")
+```
+- Entire program halts until long_running_func() finishes.
+
+- Asynchronous = non-blocking, uses await to pause and resume when ready.
+```
+async def main():
+    print("Start")
+    result = await long_running_async_func()
+    print("Done")
+```
+
+## Python Async Execution Model
+- Python is still single-threaded in asyncio world.
+- await pauses a coroutine and lets the event loop run other ready tasks.
+
+## Without await
+```
+async def fetch_data():
+    print("Fetching...")
+    asyncio.sleep(2)  # ❌ doesn't wait unless you await
+    print("Done")     # Runs immediately — wrong!
+
+asyncio.run(fetch_data())
+```
+
+## With await
+```
+async def fetch_data():
+    print("Fetching...")
+    await asyncio.sleep(2)  # ✅ now it waits
+    print("Done")
+
+asyncio.run(fetch_data())
+```
+
+## sample async function
+```
+import asyncio
+
+async def safe_fetch():
+    try:
+        await asyncio.sleep(1)
+        raise Exception("oops")
+    except Exception as e:
+        print("Caught error:", e)
+
+asyncio.run(safe_fetch())
+
+```
+
+## Proof That Other Async Code Can Run During await
+```
+import asyncio
+
+async def slow_task():
+    print("Starting slow task")
+    await asyncio.sleep(5)
+    print("Finished slow task")
+
+async def clock():
+    while True:
+        print("Clock:", asyncio.get_event_loop().time())
+        await asyncio.sleep(1)
+
+async def main():
+    task1 = asyncio.create_task(slow_task())
+    task2 = asyncio.create_task(clock())
+    await task1  # Wait for slow task only
+    task2.cancel()  # Stop the clock
+
+asyncio.run(main())
+```
+- 🕒 Output shows clock continues ticking while slow_task is paused. The event loop juggles both.
+- If you do blocking I/O (like time.sleep(), or normal requests.get()), it will block the whole main thread — even inside an async function.
+- How do you know if a function is blocking? If it’s not declared with async def, it’s not awaitable → probably blocking.
+
