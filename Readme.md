@@ -1,16 +1,16 @@
-💭 How can the coach respond token-by-token like ChatGPT?  
-Let’s use SSE to stream the AI reply as it’s being generated.  
+💭 Can we make the coach respond in real-time... over WebSockets?  
+Let’s upgrade from SSE to WebSockets for better control and interactivity.  
 
 🎯 Problem  
-Update the app to support streaming AI responses using Server-Sent Events (SSE).  
-The UI should show the reply as it arrives, token by token.  
+Switch the streaming implementation from SSE to WebSockets.  
+The coach’s reply should still appear token by token, but now using a persistent WebSocket connection.   
 
 ✅ Your Task  
  - Fix issues in main.py
- - Fix issues in home.html to:
+ - Fix issues in home.html
 
 🧪 Test  
  - Start backend: uvicorn app.main:app --reload
  - Start frontend: python -m http.server 8001
  - Open: http://localhost:8001/app/templates/home.html
- - Try chatting with the coach — you should see tokens stream in one by one, like ChatGPT.
+ - Chat with the coach — responses should stream token by token, just like before, but now powered by WebSockets.
