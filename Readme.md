@@ -295,3 +295,44 @@ users = db.query(User).options(joinedload(User.messages)).all()
    - Set response headers: `text/event-stream`
    - Use yield to send data chunk by chunk
    - Keep connection open with StreamingResponse
+
+# 21-websocket
+- WebSockets provide a full-duplex (two-way) communication channel over a single TCP connection.
+  - Unlike SSE (which is server → client only), WebSockets allow both client and server to send data anytime.
+  - Ideal for chat, games, live collaboration, etc.
+- Client opens a connection which stays opena through which server and client exchange messages
+  - Connection is initiated by client using: `const socket = new WebSocket("ws://localhost:8000/ws/chat");`
+  - Be sure to accept the connection using await websocket.accept() before sending anything.
+  - Watch for WebSocket disconnects (use try...except WebSocketDisconnect).
+- Sample Backend/Server/Python setup:
+```
+from fastapi import WebSocket
+
+@app.websocket("/ws/chat")
+async def websocket_chat(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_json()      # Receive message from client
+        await websocket.send_text("...")           # Send data back (e.g., AI response)
+```
+- Sample Frontend/Client/Javascript setup:
+```
+const socket = new WebSocket("ws://localhost:8000/ws/chat");
+
+socket.onopen = () => {
+  socket.send(JSON.stringify({ message, token }));
+};
+
+socket.onmessage = (event) => {
+  console.log("New response from coach:", event.data);
+};
+```
+- You must manually handle token validation inside the websocket endpoint — dependencies like Depends(get_current_user) won’t work.
+  - get_current_user() is designed for HTTP routes where FastAPI can inject the Request object.
+  - But in a WebSocket route, there is no Request object, so Depends(get_current_user)
+- ws:// is a URI scheme used to initiate the WebSocket protocol
+  - Normal requests use HTTP protocol(indicated by URI scheme http://)
+  - Both Websockets and HTTP are higher level protocols(at application level) that work on top of TCP protocol(at transport level which is like zooming into how exactly the data movement happens).
+
+- If your frontend is served over https://, your WebSocket URL must use wss://
+- Websocket event handlers let us define what happens during each stage of a WebSocket’s life. Eg: onopen, onmessage, onerror, onclose, etc.
