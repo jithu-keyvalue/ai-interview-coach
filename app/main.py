@@ -148,7 +148,8 @@ async def websocket_chat(websocket: WebSocket,
                 full_reply += content
                 if websocket.application_state == WebSocketState.DISCONNECTED:
                     break
-                await websocket.send_text(content)
+                # 📝 Todo: Is send_message() the right method to send some text to the client? Check how we send in other cases.
+                await websocket.send_message(content)
                 await asyncio.sleep(0.01)
 
             # Save reply

@@ -113,16 +113,45 @@
   <script>
     const token = localStorage.getItem("token");
     if (!token) window.location.href = "login.html";
-  
+
+    const chatBox = document.getElementById("chatBox");
+    let text = null;
+    let socket;
+
+    function initWebSocket() {
+    // 📝 Step 2: Here we open the Websocket connection with backend
+    socket = new WebSocket("ws://localhost:8000/websocket/chat"); // 📝 Todo: Fix the URL path
+
+      // 📝 Step 3: define what to do when connection is established
+      // These are WebSocket event handlers - what to do when 'open' event occurs
+      socket.onopen = () => {
+        console.log("WebSocket connected");
+      };
+
+      // 📝 Step 4: tell what to do when server sends us a message
+      socket.onmessage = (event) => {
+        if (text) {
+          text.textContent += event.data;
+          chatBox.lastElementChild?.scrollIntoView({ behavior: "smooth" });
+        }
+      };
+
+      socket.onerror = () => alert("WebSocket error");
+      socket.onclose = () => console.log("WebSocket closed");
+    }
+
+    // 📝 Step 1: When we go to home page, this function is called
+    initWebSocket();
+
     function logout() {
       localStorage.removeItem("token");
       window.location.href = "login.html";
     }
-  
+
     function goToSettings() {
       window.location.href = "settings.html";
     }
-  
+
     async function fetchChatHistory() {
       const res = await fetch("http://localhost:8000/api/chat/history", {
         headers: { Authorization: `Bearer ${token}` }
@@ -130,11 +159,10 @@
       const messages = await res.json();
       renderChat(messages);
     }
-  
+
     function renderChat(messages, append = false) {
-      const chatBox = document.getElementById("chatBox");
       if (!append) chatBox.innerHTML = "";
-  
+
       messages.forEach(msg => {
         const div = document.createElement("div");
         div.className = `message ${msg.role}`;
@@ -146,20 +174,18 @@
         `;
         chatBox.appendChild(div);
       });
-  
+
       chatBox.lastElementChild?.scrollIntoView({ behavior: "smooth" });
     }
-  
+
     document.getElementById("chatForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const input = document.getElementById("messageInput");
       const message = input.value;
       input.value = "";
 
-      // Add user's message to chat
+      // Show user's message
       renderChat([{ role: "user", content: message }], true);
-
-      const chatBox = document.getElementById("chatBox");
 
       // Create assistant message placeholder
       const replyDiv = document.createElement("div");
@@ -171,29 +197,15 @@
         </div>
       `;
       chatBox.appendChild(replyDiv);
-      const text = replyDiv.querySelector(".text");
+      text = replyDiv.querySelector(".text");
+
       chatBox.lastElementChild?.scrollIntoView({ behavior: "smooth" });
 
-      // Setup WebSocket
-      const socket = new WebSocket("ws://localhost:8000/ws/chat");
-
-      socket.onopen = () => {
-        const token = localStorage.getItem("token");
-        socket.send(JSON.stringify({ message, token }));
-      };
-
-      socket.onmessage = (event) => {
-        text.textContent += event.data;
-        chatBox.lastElementChild?.scrollIntoView({ behavior: "smooth" });
-      };
-
-      socket.onerror = () => {
-        alert("WebSocket error");
-      };
+      // 📝 Step 5: When user submits some message, we send it to server via socket
+      socket.send(JSON.stringify({ message, token }));
     });
-  
+
     fetchChatHistory();
   </script>
-  
 </body>
 </html>
